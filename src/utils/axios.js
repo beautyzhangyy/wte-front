@@ -11,8 +11,7 @@ import { Toast } from 'vant'
 import { setLocal } from '@/common/js/utils'
 import router from '../router'
 
-axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '//backend-api-01.newbee.ltd/api/v1' : '//backend-api-01.newbee.ltd/api/v1'
-axios.defaults.withCredentials = true
+axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? '//localhost:8081' : '//localhost:8081'
 axios.defaults.headers['X-Requested-With'] = 'XMLHttpRequest'
 axios.defaults.headers['token'] = localStorage.getItem('token') || ''
 axios.defaults.headers.post['Content-Type'] = 'application/json'

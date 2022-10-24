@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import { ActionBar, ActionBarIcon, ActionBarButton, Divider, Popup, Overlay, Loading, Dialog, ContactCard, Form, AddressEdit, AddressList, Field, CellGroup, Cell, SwipeCell, Icon, Stepper, Card, Checkbox, CheckboxGroup, Button, Swipe, SwipeItem, PullRefresh, List, Tab, Tabs, SubmitBar, Toast, Skeleton } from 'vant'
+import { ActionBar, ActionBarIcon, ActionBarButton, Divider, Popup, Overlay, Loading, Dialog, ContactCard, Form, AddressEdit, AddressList, Field, CellGroup, Cell, SwipeCell, Icon, Stepper, Card, Checkbox, CheckboxGroup, Button, Swipe, SwipeItem, PullRefresh, List, Tab, Tabs, SubmitBar, Toast, Skeleton, Uploader} from 'vant'
 import App from './App.vue'
 import store from './store'
 import router from './router'
@@ -14,7 +14,7 @@ app.config.globalProperties.$filters = {
     if (url && url.startsWith('http')) {
       return url
     } else {
-      url = `http://backend-api-01.newbee.ltd${url}`
+      url = `http://localhost:8081${url}`
       return url
     }
   }
@@ -51,7 +51,8 @@ app.use(ActionBarButton)
   .use(Checkbox)
   .use(CheckboxGroup)
   .use(Skeleton)
-
+  .use(Uploader)
+  
 app.use(router)
 app.use(store)
 

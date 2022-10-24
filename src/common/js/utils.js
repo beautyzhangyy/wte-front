@@ -7,6 +7,8 @@
  * 版权所有，侵权必究！
  */
 
+const imgRootUrl = 'http://localhost:8081'
+
 export function getQueryString(name) {
   var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
   var r = window.location.search.substr(1).match(reg);
@@ -23,6 +25,10 @@ export const getLocal = (name) => {
 
 export const setLocal = (name, value) => {
   localStorage.setItem(name, value)
+}
+
+export const genImgURL = (headPic) => {
+  return imgRootUrl + headPic + '?random=' + Math.random()
 }
 
 export const tdist = {

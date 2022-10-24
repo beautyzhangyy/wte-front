@@ -9,12 +9,12 @@
 
 import axios from '../utils/axios'
 
-export function getUserInfo() {
-  return axios.get('/user/info');
+export function getUserInfo(params) {
+  return axios.post('/user/login',params);
 }
 
 export function EditUserInfo(params) {
-  return axios.put('/user/info', params);
+  return axios.post('/user/updateInfo', params);
 }
 
 export function login(params) {
@@ -27,5 +27,9 @@ export function logout() {
 
 export function register(params) {
   return axios.post('/user/register', params);
+}
+
+export function uploadHeadPic(params) {
+  return axios.post('/user/uploadHeadPic', params, {headers: {'Content-Type': 'multipart/form-data'}});
 }
 

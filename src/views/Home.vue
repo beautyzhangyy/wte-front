@@ -13,11 +13,15 @@
     <header class="home-header wrap" :class="{'active' : headerScroll}">
       <router-link tag="i" to="./category"><i class="nbicon nbmenu2"></i></router-link>
       <div class="header-search">
-        <span class="app-name">新蜂商城</span>
+        <span class="app-name">WTE</span>
         <i class="iconfont icon-search"></i>
-        <router-link tag="span" class="search-title" to="./product-list?from=home">山河无恙，人间皆安</router-link>
+        <router-link tag="span" class="search-title" to="./product-list?from=home">请输入关键字</router-link>
       </div>
-      <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录</router-link>
+      <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录   </router-link>
+      <router-link class="login" tag="span" to="./user" v-else>
+        <van-icon name="manager-o" />
+      </router-link>
+      <router-link class="login" tag="span" to="./login" v-if="!isLogin">我是卖家</router-link>
       <router-link class="login" tag="span" to="./user" v-else>
         <van-icon name="manager-o" />
       </router-link>
@@ -30,6 +34,7 @@
         <span>{{item.name}}</span>
       </div>
     </div>
+<!--
     <div class="good">
       <header class="good-header">新品上线</header>
       <van-skeleton title :row="3" :loading="loading">
@@ -44,6 +49,7 @@
         </div>
       </van-skeleton>
     </div>
+
     <div class="good">
       <header class="good-header">热门商品</header>
       <van-skeleton title :row="3" :loading="loading">
@@ -58,6 +64,7 @@
         </div>
       </van-skeleton>
     </div>
+
     <div class="good" :style="{ paddingBottom: '100px'}">
       <header class="good-header">最新推荐</header>
       <van-skeleton title :row="3" :loading="loading">
@@ -72,6 +79,7 @@
         </div>
       </van-skeleton>
     </div>
+-->
   </div>
 </template>
 
@@ -146,8 +154,8 @@ export default {
       loading: true
     })
     onMounted(async () => {
-      const token = getLocal('token')
-      if (token) {
+      const userinfo = getLocal('userinfo')
+      if (userinfo) {
         state.isLogin = true
         // 获取购物车数据.
         store.dispatch('updateCart')
@@ -218,7 +226,7 @@ export default {
 
       .header-search {
           display: flex;
-          .wh(74%, 20px);
+          .wh(64%, 20px);
           line-height: 20px;
           margin: 10px 0;
           padding: 5px 0;
@@ -261,6 +269,8 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     padding-bottom: 13px;
+    position: relative;
+    top: 30px;
     div {
       display: flex;
       flex-direction: column;

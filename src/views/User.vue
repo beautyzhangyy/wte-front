@@ -14,11 +14,12 @@
     <van-skeleton title :avatar="true" :row="3" :loading="loading">
       <div class="user-info">
         <div class="info">
-          <img src="https://s.yezgea02.com/1604040746310/aaaddd.png"/>
+          <img :src=imgURL />
           <div class="user-desc">
-            <span>昵称：{{ user.nickName }}</span>
-            <span>登录名：{{ user.loginName }}</span>
-            <span class="name">个性签名：{{ user.introduceSign }}</span>
+            <span>账号：{{ user.userName }}</span>
+            <span>昵称：{{ user.nickname }}</span>
+            <span>手机：{{ user.phoneNum }}</span>
+            <span class="name">地址：{{ user.userAddress }}</span>
           </div>
         </div>
       </div>
@@ -36,10 +37,6 @@
         <span>地址管理</span>
         <van-icon name="arrow" />
       </li>
-      <li @click="goTo('/about')">
-        <span>关于我们</span>
-        <van-icon name="arrow" />
-      </li>
     </ul>
     <nav-bar></nav-bar>
   </div>
@@ -49,8 +46,9 @@
 import { reactive, onMounted, toRefs } from 'vue'
 import navBar from '@/components/NavBar'
 import sHeader from '@/components/SimpleHeader'
-import { getUserInfo } from '@/service/user'
 import { useRouter } from 'vue-router'
+import { getLocal, genImgURL } from '@/common/js/utils'
+
 export default {
   components: {
     navBar,
@@ -60,12 +58,13 @@ export default {
     const router = useRouter()
     const state = reactive({
       user: {},
+      imgURL: '',
       loading: true
     })
 
-    onMounted(async () => {
-      const { data } = await getUserInfo()
-      state.user = data
+    onMounted(() => {
+      state.user = JSON.parse(getLocal('userinfo'))
+      state.imgURL = state.user.headPic ? genImgURL(state.user.headPic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
       state.loading = false
     })
 
@@ -109,7 +108,7 @@ export default {
     .user-info {
       width: 94%;
       margin: 10px;
-      height: 115px;
+      height: 155px;
       background: linear-gradient(90deg, @primary, #51c7c7);
       box-shadow: 0 2px 5px #269090;
       border-radius: 6px;
@@ -118,10 +117,10 @@ export default {
         display: flex;
         width: 100%;
         height: 100%;
-        padding: 25px 20px;
+        padding: 30px 20px;
         .boxSizing();
         img {
-          .wh(60px, 60px);
+          .wh(90px, 90px);
           border-radius: 50%;
           margin-top: 4px;
         }
