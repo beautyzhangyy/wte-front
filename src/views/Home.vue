@@ -21,8 +21,8 @@
       <router-link class="login" tag="span" to="./user" v-else>
         <van-icon name="manager-o" />
       </router-link>
-      <router-link class="login" tag="span" to="./login" v-if="!isLogin">我是卖家</router-link>
-      <router-link class="login" tag="span" to="./user" v-else>
+      <router-link class="sellerLogin" tag="span" to="./sellerLogin" v-if="!isLogin">我是卖家</router-link>
+      <router-link class="sellerLogin" tag="span" to="./seller" v-else>
         <van-icon name="manager-o" />
       </router-link>
     </header>
@@ -222,6 +222,9 @@ export default {
         .login {
           color: #fff;
         }
+        .sellerLogin {
+          color: #fff;
+        }
       }
 
       .header-search {
@@ -255,6 +258,14 @@ export default {
         font-size: 22px;
       }
       .login {
+        color: @primary;
+        line-height: 52px;
+        .van-icon-manager-o {
+          font-size: 20px;
+          vertical-align: -3px;
+        }
+      }
+      .sellerLogin {
         color: @primary;
         line-height: 52px;
         .van-icon-manager-o {

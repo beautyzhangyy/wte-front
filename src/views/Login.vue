@@ -11,7 +11,7 @@
 <template>
   <div class="login">
     <s-header :name="type == 'login' ? '登录' : '注册'" :back="'/home'"></s-header>
-    <img class="logo" src="https://s.yezgea02.com/1604045825972/newbee-mall-vue3-app-logo.png" alt="">
+    <img class="logo" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt="">
     <div v-if="type == 'login'" class="login-body login">
       <van-form @submit="onSubmit">
         <van-field
@@ -121,8 +121,8 @@ export default {
 <style lang="less">
   .login {
     .logo {
-      width: 120px;
-      height: 120px;
+      width: 180px;
+      height: 180px;
       display: block;
       margin: 80px auto 20px;
     }

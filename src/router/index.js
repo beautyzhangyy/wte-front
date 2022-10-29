@@ -119,6 +119,30 @@ const router = createRouter({
         index: 3
       }
     },
+    {
+      path: '/sellerLogin',
+      name: 'sellerLogin',
+      component: () => import(/* webpackChunkName: "sellerLogin" */ '@/views/SellerLogin.vue'),
+      meta: {
+        index: 1
+      }
+    },
+    {
+      path: '/seller',
+      name: 'seller',
+      component: () => import(/* webpackChunkName: "seller" */ '@/views/Seller.vue'),
+      meta: {
+        index: 1
+      }
+    },
+    {
+      path: '/sellerSetting',
+      name: 'sellerSetting',
+      component: () => import(/* webpackChunkName: "sellerSetting" */ '@/views/SellerSetting.vue'),
+      meta: {
+        index: 2
+      }
+    },
   ]
 })
 
