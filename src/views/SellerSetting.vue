@@ -118,11 +118,11 @@
   
         if(res.resultCode == 200) {
           // 更新localStorage
-          state.seller.sellerHeadPic = res.data
+          state.seller.storePic = res.data
           setLocal('sellerinfo',JSON.stringify(state.seller))
   
           // 渲染图片
-          state.imgURL = genImgURL(state.seller.sellerHeadPic)
+          state.imgURL = genImgURL(state.seller.storePic)
         }else {
           Toast.fail("上传头像失败")
         }

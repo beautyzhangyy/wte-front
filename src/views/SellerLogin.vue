@@ -67,13 +67,6 @@
             :rules="[{ required: true, message: '请填写电话' }]"
           />
           <van-field
-            v-model="selltime1"
-            name="selltime1"
-            label="营业时间"
-            placeholder="营业时间"
-            :rules="[{ required: true, message: '请填写营业时间' }]"
-          />
-          <van-field
             v-model="selleraddress1"
             name="selleraddress1"
             label="商家地址"
