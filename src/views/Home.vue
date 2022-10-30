@@ -21,9 +21,9 @@
       <router-link class="login" tag="span" to="./user" v-else>
         <van-icon name="manager-o" />
       </router-link>
-      <router-link class="sellerLogin" tag="span" to="./sellerLogin" v-if="!isLogin">我是卖家</router-link>
+      <router-link class="sellerLogin" tag="span" to="./sellerLogin" v-if="!isSellerLogin">我是卖家</router-link>
       <router-link class="sellerLogin" tag="span" to="./seller" v-else>
-        <van-icon name="manager-o" />
+        卖家页面
       </router-link>
     </header>
     <nav-bar />
@@ -104,6 +104,7 @@ export default {
     const state = reactive({
       swiperList: [], // 轮播图列表
       isLogin: false, // 是否已登录
+      isSellerLogin: false, // 卖家的登录状态
       headerScroll: false, // 滚动透明判断
       hots: [],
       newGoodses: [],
@@ -154,6 +155,11 @@ export default {
       loading: true
     })
     onMounted(async () => {
+      const sellerinfo = getLocal('sellerinfo')
+      if (sellerinfo) {
+        state.isSellerLogin = true
+      }
+
       const userinfo = getLocal('userinfo')
       if (userinfo) {
         state.isLogin = true

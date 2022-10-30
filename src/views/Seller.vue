@@ -16,29 +16,27 @@
           <div class="info">
             <img :src=imgURL />
             <div class="seller-desc">
-              <span>商家账号：{{ seller.sellerName }}</span>
-              <span>商家密码：{{ seller.sellerPassword }}</span>
-              <span>商家店名：{{ seller.storeName }}</span>
-              <span>商家头像：{{ seller.sellerHeadPic }}</span>
-              <span>商家电话号码：{{ seller.sellerPhoneNum }}</span>
-              <span>店面图片：{{ seller.storePic }}</span>
-              <span>商家营业时间：{{ seller.sellTime }}</span>
-              <span>商家营业许可证：{{ seller.storeLicence }}</span>
-              <span class="name">商家地址：{{ seller.sellerAddress }}</span>
+              <span>店名：{{ seller.storeName }}</span>
+              <span>电话号码：{{ seller.sellerPhoneNum }}</span>
+              <span>营业时间：{{ seller.sellTime }}</span>
+              <span>营业许可证：{{ seller.storeLicence }}</span>
+              <span class="name">店铺地址：{{ seller.sellerAddress }}</span>
             </div>
           </div>
         </div>
       </van-skeleton>
-      <!-- <ul class="seller-list">
+     <ul class="seller-list">
+      <!--
         <li class="van-hairline--bottom" @click="goTo('/order')">
         <span>订单管理</span>
         <van-icon name="arrow" />
         </li>
+        -->
         <li class="van-hairline--bottom" @click="goTo('/sellerSetting')">
           <span>账号管理</span>
           <van-icon name="arrow" />
         </li>
-      </ul> -->
+      </ul>
       <nav-bar></nav-bar>
     </div>
   </template>
@@ -47,7 +45,7 @@
   import { reactive, onMounted, toRefs } from 'vue'
   import navBar from '@/components/NavBar'
   import sHeader from '@/components/SimpleHeader'
-  import { sellerRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
   import { getLocal, genImgURL } from '@/common/js/utils'
   
   export default {
@@ -56,7 +54,7 @@
       sHeader
     },
     setup() {
-      const router = sellerRouter()
+      const router = useRouter()
       const state = reactive({
         seller: {},
         imgURL: '',

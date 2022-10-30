@@ -40,9 +40,9 @@
           <van-field
             v-model="sellername1"
             name="sellername1"
-            label="商家名"
-            placeholder="商家名"
-            :rules="[{ required: true, message: '请填写商家名' }]"
+            label="商家账号"
+            placeholder="商家账号"
+            :rules="[{ required: true, message: '请填写商家账号' }]"
           />
           <van-field
             v-model="sellerpassword1"
@@ -95,11 +95,11 @@
   import { sellerLogin, sellerRegister } from '@/service/seller'
   import { setLocal } from '@/common/js/utils'
   import { Toast } from 'vant'
-  import { sellerRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
   
   export default {
     setup() {
-      const router = sellerRouter()
+      const router = useRouter()
       const state = reactive({
         sellername: '',
         sellerpassword: '',

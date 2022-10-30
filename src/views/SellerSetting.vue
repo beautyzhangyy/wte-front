@@ -9,7 +9,7 @@
 -->
 
 <template>
-    <div class="sellerSetting-box">
+    <div class="seting-box">
       <s-header :name="'账号管理'"></s-header>
       <div class="seller-info">
         <div class="uploader_box">
@@ -22,19 +22,10 @@
             @change="change($event)"
           />
         </div>
-        <!--
-        <div class="uploadImg">
-          <van-uploader multiple :max-count="1" :deletable="false" :preview-full-image="false" :max-size="2 * 1024 * 1024" accept="image/*"
-          @oversize="onOversize" :before-read="beforeRead" @after-read="afterRead" >
-            <img src="https://s.yezgea02.com/1604040746310/aaaddd.png"/>
-           <van-button type="primary"></van-button>
-        </van-uploader>
-        </div>
-        -->
       </div>
       <div class="input-item">
         <van-field v-model="storeName" label="店铺名" />
-        <van-field v-model="sellerPassword" type='password' label="修改密码" />
+        <van-field v-model="sellerPassword" type='password' label="密码" />
         <van-field v-model="sellerPhoneNum" label="手机号" />
         <van-field v-model="sellTime" label="营业时间" />
         <van-field v-model="sellerAddress" label="地址" />
@@ -47,7 +38,7 @@
   <script>
   import { reactive, onMounted, toRefs } from 'vue'
   import sHeader from '@/components/SimpleHeader'
-  import { EditSellerInfo, uploadSellerHeadPic, uploadStorePic, uploadStoreLicence} from '@/service/seller'
+  import { EditSellerInfo, uploadStorePic} from '@/service/seller'
   import { setLocal } from '@/common/js/utils'
   import { Toast} from 'vant'
   import { getLocal, genImgURL } from '../common/js/utils'
@@ -63,9 +54,7 @@
         sellerPhoneNum:'',
         sellTime:'',
         sellerAddress:'',
-        imgURL1: '',
-        imgURL2: '',
-        imgURL3: ''
+        imgURL: '',
       })
   
       onMounted(() => {
@@ -75,27 +64,25 @@
         state.sellerPhoneNum = state.seller.sellerPhoneNum
         state.sellTime = state.seller.sellTime
         state.sellerAddress = state.seller.sellerAddress
-        state.imgURL1 = state.seller.sellerHeadPic ? genImgURL(state.seller.sellerHeadPic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
-        state.imgURL2 = state.seller.storePic ? genImgURL(state.seller.storePic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
-        state.imgURL3 = state.seller.storeLicence ? genImgURL(state.seller.storeLicence) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
+        state.imgURL = state.seller.storePic ? genImgURL(state.seller.storePic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
       })
   
       const save = async () => {
         const params = {
             sellerId: state.seller.sellerId,
-            storeName:state.seller.storeName,
-            sellerPassword:state.seller.sellerPassword,
-            sellerPhoneNum:state.seller.sellerPhoneNum,
-            sellTime:state.seller.sellTime,
-            sellerAddress:state.seller.sellerAddress
+            storeName:state.storeName,
+            sellerPassword:state.sellerPassword,
+            sellerPhoneNum:state.sellerPhoneNum,
+            sellTime:state.sellTime,
+            sellerAddress:state.sellerAddress
         }
         const res = await EditSellerInfo(params)
         if(res.resultCode == 200) {
-            state.storeName = state.seller.storeName
-            state.sellerPassword = state.seller.sellerPassword
-            state.sellerPhoneNum = state.seller.sellerPhoneNum
-            state.sellTime = state.seller.sellTime
-            state.sellerAddress = state.seller.sellerAddress
+            state.seller.storeName = state.storeName
+            state.seller.sellerPassword = state.sellerPassword
+            state.seller.sellerPhoneNum = state.sellerPhoneNum
+            state.seller.sellTime = state.sellTime
+            state.seller.sellerAddress = state.sellerAddress
           setLocal('sellerinfo',JSON.stringify(state.seller))
           Toast.success('保存成功')
         }
@@ -106,8 +93,8 @@
         window.location.href = '/home'
       }
   
-      // 上传头像
-      const change1 = async (e) => {
+      // 上传店铺图片
+      const change = async (e) => {
         let file = e.target.files
         let length = e.target.files.length
         if (length > 1 || length == 0) {
@@ -127,7 +114,7 @@
         }
         formData1.append("sellerName", state.seller.sellerName)
         formData1.append("sellerPassword", state.seller.sellerPassword)
-        const res = await uploadSellerHeadPic(formData1)
+        const res = await uploadStorePic(formData1)
   
         if(res.resultCode == 200) {
           // 更新localStorage
@@ -141,82 +128,12 @@
         }
         Toast.clear()
       }
-      //店铺图片
-      const change2 = async (e) => {
-        let file = e.target.files
-        let length = e.target.files.length
-        if (length > 1 || length == 0) {
-          Toast.fail("只能上传一张图片")
-          return
-        }
-  
-        Toast.loading({
-          message: '上传中...',
-          forbidClick: true
-        });
-        // 创建一个空对象实例
-        let formData2 = new FormData();
-        // 调用append()方法添加数据
-        for (let i = 0; i < length; i++) {
-          formData2.append("file", file[i]);
-        }
-        formData2.append("sellerName", state.seller.sellerName)
-        formData2.append("sellerPassword", state.seller.sellerPassword)
-        const res = await uploadStorePic(formData2)
-  
-        if(res.resultCode == 200) {
-          // 更新localStorage
-          state.seller.storePic = res.data
-          setLocal('sellerinfo',JSON.stringify(state.seller))
-  
-          // 渲染图片
-          state.imgURL = genImgURL(state.seller.storePic)
-        }else {
-          Toast.fail("上传店铺图片失败")
-        }
-        Toast.clear()
-      }
-      //营业许可证
-      const change3 = async (e) => {
-        let file = e.target.files
-        let length = e.target.files.length
-        if (length > 1 || length == 0) {
-          Toast.fail("只能上传一张图片")
-          return
-        }
-  
-        Toast.loading({
-          message: '上传中...',
-          forbidClick: true
-        });
-        // 创建一个空对象实例
-        let formData3 = new FormData();
-        // 调用append()方法添加数据
-        for (let i = 0; i < length; i++) {
-          formData3.append("file", file[i]);
-        }
-        formData3.append("sellerName", state.seller.sellerName)
-        formData3.append("sellerPassword", state.seller.sellerPassword)
-        const res = await uploadStoreLicence(formData3)
-        if(res.resultCode == 200) {
-          // 更新localStorage
-          state.seller.storeLicence = res.data
-          setLocal('sellerinfo',JSON.stringify(state.seller))
-  
-          // 渲染图片
-          state.imgURL = genImgURL(state.seller.storeLicence)
-        }else {
-          Toast.fail("上传营业许可证失败")
-        }
-        Toast.clear()
-      }
+
       return {
         ...toRefs(state),
         save,
         handleLogout,
-        change1,
-        change2,
-        change3
+        change,
       }
     }
   
