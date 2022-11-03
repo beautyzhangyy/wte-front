@@ -17,7 +17,7 @@
         <i class="iconfont icon-search"></i>
         <router-link tag="span" class="search-title" to="./product-list?from=home">请输入关键字</router-link>
       </div>
-      <router-link class="login" tag="span" to="./login" v-if="!isLogin">登录   </router-link>
+      <router-link class="login" tag="span" to="./login" v-if="!isLogin">阿巴阿巴登录   </router-link>
       <router-link class="login" tag="span" to="./user" v-else>
         <van-icon name="manager-o" />
       </router-link>
@@ -34,6 +34,7 @@
         <span>{{item.name}}</span>
       </div>
     </div>
+
 <!--
     <div class="good">
       <header class="good-header">新品上线</header>
