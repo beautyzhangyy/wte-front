@@ -58,6 +58,47 @@
  
     </div>
 
+    <!-- <script>
+import { reactive, onMounted, toRefs } from 'vue'
+import navBar from '@/components/NavBar'
+import sHeader from '@/components/SimpleHeader'
+import { useRouter } from 'vue-router'
+import { getLocal, genImgURL } from '@/common/js/utils'
+
+export default {
+  components: {
+    navBar,
+    sHeader
+  },
+  setup() {
+    const router = useRouter()
+    const state = reactive({
+      production: {},
+      imgURL: '',
+      loading: true
+    })
+
+    onMounted(() => {
+      state.production = JSON.parse(getLocal('productioninfo'))
+    })
+
+    const goBack = () => {
+      router.go(-1)
+    }
+
+    const goTo = (r, query) => {
+      router.push({ path: r, query: query || {} })
+    }
+
+    return {
+      ...toRefs(state),
+      goBack,
+      goTo
+    }
+  }
+}
+</script> -->
+
     
 <!--
     <div class="good" :style="{ paddingBottom: '100px'}">
