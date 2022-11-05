@@ -9,10 +9,45 @@
 -->
 
 <template>
-    <div class="productUpload-box">
+    <div class="seting-box">
       <s-header :name="'菜品上传'"></s-header>
-      <div class="product-info">
-        <div class="uploader_box">
+      <div type = 'productUpload' class="input-item">
+        <van-form @submit="onSubmit">
+          <van-field
+          v-model="productname1"
+          name="productname1"
+          label="菜名"
+          placeholder="菜名"
+          :rules="[{ required: true, message: '请填写菜名' }]"
+          />
+          <van-field
+          v-model="productprice1"
+          name="productprice1"
+          label="价格"
+          placeholder="价格"
+          :rules="[{ required: true, message: '请填写价格' }]"
+          />
+          <van-field
+          v-model="productintro1"
+          name="productintro1"
+          label="介绍"
+          placeholder="介绍"
+          :rules="[{ required: true, message: '请填写介绍' }]"
+          />
+          <van-field
+          v-model="productinventory1"
+          name="productinventory1"
+          label="库存"
+          placeholder="库存"
+          :rules="[{ required: true, message: '请填写库存' }]"
+          />
+          <div style="margin: 16px;">
+            <van-button round block color="#1baeae" native-type="submit">保存</van-button>
+          </div>
+        </van-form>
+      </div>
+        <div class="product-info" v-show="areShow">
+          <div class="uploader_box">
           <img id="logimg" :src=imgURL />
           <input
             type="file"
@@ -21,7 +56,16 @@
             multiple="multiple"
             @change="change($event)"
           />
+          </div>
         </div>
+      </div>
+ </template>
+          <!-- <van-field v-model="productName" label="菜名" />
+        <van-field v-model="productPrice" type='password' label="价格" />
+        <van-field v-model="productPicture" label="缩略图" />
+        <van-field v-model="productIntro" label="介绍" />
+        <van-field v-model="productInventory" label="库存" />
+        <van-field v-model="seller_id" label="所属买家ID" /> -->
         <!--
         <div class="uploadImg">
           <van-uploader multiple :max-count="1" :deletable="false" :preview-full-image="false" :max-size="2 * 1024 * 1024" accept="image/*"
@@ -31,77 +75,52 @@
         </van-uploader>
         </div>
         -->
-      </div>
-      <div class="input-item">
-        <van-field v-model="productName" label="菜名" />
-        <van-field v-model="productPrice" type='password' label="价格" />
-        <van-field v-model="productIntro" label="介绍" />
-        <van-field v-model="productStatus" label="状态" />
-        <van-field v-model="productInventory" label="库存" />
-      </div>
-      <van-button round class="save-btn" color="#1baeae" type="primary" @click="save" block>保存</van-button>
-      <van-button round class="save-btn" color="#1baeae" type="primary" @click="handleLogout" block>返回</van-button>
-    </div>
-  </template>
+
   
   <script>
-  import { reactive, onMounted, toRefs } from 'vue'
+  // import { reactive,onMounted, toRefs } from 'vue'
+  import { reactive,toRefs } from 'vue'
   import sHeader from '@/components/SimpleHeader'
-  import { productUpload, uploadProductSPic} from '@/service/seller'
-  import { setLocal } from '@/common/js/utils'
+  import { productUpload,uploadProductSPic} from '@/service/product'
+  import { setLocal } from '@/common/js/utils'  
   import { Toast} from 'vant'
-  import { getLocal, genImgURL } from '../common/js/utils'
+  // import { getLocal, genImgURL } from '../common/js/utils'
+  import {genImgURL } from '../common/js/utils'
   export default {
-    components: {
-      sHeader
-    },
+    data(){
+        return{
+          areShow:true
+        }
+      },
     setup() {
       const state = reactive({
-        product:'',
-        productName: '',
-        productPrice: '',
-        productIntro:'',
-        productStatus:'',
-        productInventory:'',
+        productname1: '',
+        productprice1: '',
+        productintro1: '',
+        productinventory1:'',
+        type:'productUpload',
+        // sellerid1:'',
         imgURL: ''
       })
-  
-      onMounted(() => {
-        state.product = JSON.parse(getLocal('productinfo'))
-        state.productName = state.product.productName
-        state.productPrice = state.product.productPrice
-        state.productIntro = state.product.productIntro
-        state.productStatus = state.product.productStatus
-        state.productInventory = state.product.productInventory
-        state.imgURL = state.product.productSPic ? genImgURL(state.product.productSPic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
-      })
-  
-      const save = async () => {
-        const params = {
-            productName: state.product.productName,
-            productPrice: state.product.productPrice,
-            productIntro: state.product.productIntro,
-            productStatus: state.product.productStatus,
-            productInventory: state.product.productInventory,
-        }
-        const res = await EditSellerInfo(params)
-        if(res.resultCode == 200) {
-            state.productName = state.product.productName
-            state.productPrice = state.product.productPrice
-            state.productIntro = state.product.productIntro
-            state.productStatus = state.product.productStatus
-            state.productInventory = state.product.productInventory
-          setLocal('productinfo',JSON.stringify(state.product))
-          Toast.success('保存成功')
-        }
+
+      // onMounted(() => {
+      //   state.seller = JSON.parse(getLocal('sellerinfo'))
+      //   state.sellerid1 = state.seller.sellerId
+      // })
+
+      const onSubmit = async (values) => {
+        const { data } = await productUpload({
+            "productName": values.productname1,
+            "productPrice": values.productprice1,
+            "productIntro":values.productintro1,
+            "productInventory":values.productinventory1,
+            "productStatus":"1",
+            // "sellerId":values.sellerid1
+          })
+          Toast.success('菜品上传成功')
+          setLocal('productinfo',JSON.stringify(data))
       }
-  
-      const handleLogout = () => {
-        setLocal('productinfo', '')
-        window.location.href = '/sellerSetting'
-      }
-  
-      // 上传菜品图
+
       const change = async (e) => {
         let file = e.target.files
         let length = e.target.files.length
@@ -136,14 +155,16 @@
         }
         Toast.clear()
       }
+
       return {
         ...toRefs(state),
-        save,
-        handleLogout,
-        change
+        onSubmit,
+        change,
       }
+    },
+    components: {
+      sHeader
     }
-  
   }
   </script>
   
@@ -156,7 +177,7 @@
       }
     }
   
-    .seller-info {
+    .product-info {
         width: 94%;
         margin: 10px;
         height: 155px;

@@ -40,11 +40,3 @@
   export function uploadStoreLicence(params) {
     return axios.post('/seller/uploadStoreLicence', params, {headers: {'Content-Type': 'multipart/form-data'}});
   }
-
-  export function productUpload(params) {
-    return axios.post('/seller/productUpload', params, {headers: {'Content-Type': 'multipart/form-data'}});
-  }
-
-  export function uploadProductSPic(params) {
-    return axios.post('/seller/productUpload/uploadProductSPic', params, {headers: {'Content-Type': 'multipart/form-data'}});
-  }

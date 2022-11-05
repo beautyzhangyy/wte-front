@@ -143,6 +143,22 @@ const router = createRouter({
         index: 2
       }
     },
+    {
+      path: '/product',
+      name: 'product',
+      component: () => import('@/views/Product.vue'),
+      meta: {
+        index: 2
+      }
+    },
+    {
+      path: '/productUpload',
+      name: 'productUpload',
+      component: () => import(/* webpackChunkName: "productUpload" */ '@/views/ProductUpload.vue'),
+      meta: {
+        index: 3
+      }
+    },
   ]
 })
 

@@ -11,7 +11,7 @@
 <template>
     <div class="sellerLogin">
       <s-header :name="type == 'sellerLogin' ? '商家登录' : '商家注册'" :back="'/home'"></s-header>
-      <img class="logo" src="https://img95.699pic.com/element/40132/8910.png_300.png!/fw/431/clip/0x300a0a0" alt="">
+      <img class="logo" src="https://img.51miz.com/Element/00/76/26/17/3a6723ce_E762617_2a8d9ea0.png" alt="">
       <div v-if="type == 'sellerLogin'" class="sellerLogin-body sellerLogin">
         <van-form @submit="onSubmit">
           <van-field
@@ -150,8 +150,8 @@
   <style lang="less">
     .sellerLogin {
       .logo {
-        width: 180px;
-        height: 180px;
+        width: 200px;
+        height: 200px;
         display: block;
         margin: 80px auto 20px;
       }
