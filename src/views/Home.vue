@@ -35,11 +35,11 @@
       </div>
     </div>
     <div class="good">
-      <header class="good-header">菜品展示</header>
+      <header class="good-header">新品上架</header>
       <van-skeleton title :row="3" :loading="loading">
         <div class="good-box">
           <div class="good-item" v-for="item in productinfo" :key="item.productId">
-            <img :src="$filters.prefix(item.productSPic)" alt="">
+            <img :src="imgRootUrl+item.productSPic" alt="">
             <div class="good-desc">
               <span>菜名{{ item.productName }}</span>
               <span>价格：{{ item.productPrice }}</span>
@@ -61,8 +61,8 @@ import { reactive, onMounted, toRefs, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import swiper from '@/components/Swiper'
 import navBar from '@/components/NavBar'
-import { getHome } from '@/service/home'
 import { getLocal } from '@/common/js/utils'
+import { getProductsAtLeast } from '@/service/product'
 import { Toast } from 'vant'
 import { useStore  } from 'vuex'
 export default {
@@ -82,47 +82,21 @@ export default {
       hots: [],
       productinfo: [],
       recommends: [],
+      imgRootUrl : 'http://localhost:8081',
       categoryList: [
         {
-          name: '新蜂超市',
+          name: '智能推荐',
           imgUrl: 'https://s.yezgea02.com/1604041127880/%E8%B6%85%E5%B8%82%402x.png',
           categoryId: 100001
         }, {
-          name: '新蜂服饰',
+          name: '随机推送',
+          imgUrl: 'https://s.yezgea02.com/1604041127880/%E6%9C%8D%E9%A5%B0%402x.png',
+          categoryId: 100002
+        },
+        {
+          name: '店铺列表',
           imgUrl: 'https://s.yezgea02.com/1604041127880/%E6%9C%8D%E9%A5%B0%402x.png',
           categoryId: 100003
-        }, {
-          name: '全球购',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E5%85%A8%E7%90%83%E8%B4%AD%402x.png',
-          categoryId: 100002
-        }, {
-          name: '新蜂生鲜',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E7%94%9F%E9%B2%9C%402x.png',
-          categoryId: 100004
-        }, {
-          name: '新蜂到家',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E5%88%B0%E5%AE%B6%402x.png',
-          categoryId: 100005
-        }, {
-          name: '充值缴费',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E5%85%85%E5%80%BC%402x.png',
-          categoryId: 100006
-        }, {
-          name: '9.9元拼',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/9.9%402x.png',
-          categoryId: 100007
-        }, {
-          name: '领劵',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E9%A2%86%E5%88%B8%402x.png',
-          categoryId: 100008
-        }, {
-          name: '省钱',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E7%9C%81%E9%92%B1%402x.png',
-          categoryId: 100009
-        }, {
-          name: '全部',
-          imgUrl: 'https://s.yezgea02.com/1604041127880/%E5%85%A8%E9%83%A8%402x.png',
-          categoryId: 100010
         }
       ],
       loading: true
@@ -143,11 +117,8 @@ export default {
         message: '加载中...',
         forbidClick: true
       });
-      const { data } = await getHome()
-      state.swiperList = data.carousels
-      state.productinfo = data.productinfo
-      state.hots = data.hotGoodses
-      state.recommends = data.recommendGoodses
+      const { data } = await getProductsAtLeast()
+      state.productinfo = data.list
       state.loading = false
       Toast.clear()
     })
@@ -258,7 +229,7 @@ export default {
     flex-shrink: 0;
     flex-wrap: wrap;
     width: 100%;
-    padding-bottom: 13px;
+    padding-bottom: 30px;
     position: relative;
     top: 30px;
     div {
@@ -315,10 +286,10 @@ export default {
       }
     .show1 {
         color: @primary;
-        line-height: 52px;
+        line-height: 25px;
         .shopping {
-          width: 100px;
-          height: 100px;
+          width: 50px;
+          height: 50px;
           vertical-align: -3px;
         }
       }

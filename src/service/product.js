@@ -15,3 +15,7 @@
   export function uploadProductSPic(params) {
     return axios.post('/product/uploadProductPic', params, {headers: {'Content-Type': 'multipart/form-data'}});
   }
+
+  export function getProductsAtLeast() {
+    return axios.get('/product/ProductsAtLeast');
+  }

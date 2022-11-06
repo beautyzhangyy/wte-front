@@ -14,27 +14,36 @@
       <div type = 'productUpload' class="input-item">
         <van-form @submit="onSubmit">
           <van-field
-          v-model="productName"
+          v-model="productname1"
+          name="productname1"
           label="菜名"
+          placeholder="菜名"
           :rules="[{ required: true, message: '请填写菜名' }]"
           />
           <van-field
-          v-model="productPrice"
+          v-model="productprice1"
+          name="productprice1"
           label="价格"
+          placeholder="价格"
           :rules="[{ required: true, message: '请填写价格' }]"
           />
           <van-field
-          v-model="productIntro"
+          v-model="productintro1"
+          name="productintro1"
           label="介绍"
+          placeholder="介绍"
           :rules="[{ required: true, message: '请填写介绍' }]"
           />
           <van-field
-          v-model="productInventory"
+          v-model="productinventory1"
+          name="productinventory1"
           label="库存"
+          placeholder="库存"
           :rules="[{ required: true, message: '请填写库存' }]"
           />
           <div class="product-info">
             <div class="uploader_box">
+              <img id="logimg" :src=imgURL />
               <input
                 type="file"
                 id="upload_input"
@@ -56,9 +65,10 @@
   <script>
   import { reactive,onMounted, toRefs } from 'vue'
   import sHeader from '@/components/SimpleHeader'
-  import { productUpload, uploadProductSPic} from '@/service/product'
+  import { productUpload,uploadProductSPic} from '@/service/product'
+  import { setLocal } from '@/common/js/utils'  
   import { Toast} from 'vant'
-  import { getLocal } from '../common/js/utils'
+  import { getLocal, genImgURL } from '../common/js/utils'
   export default {
     data(){
         return{
@@ -67,59 +77,29 @@
       },
     setup() {
       const state = reactive({
-        productName: '',
-        productPrice: '',
-        productIntro: '',
-        productInventory:'',
-        imgFile: ''
+        productname1: '',
+        productprice1: '',
+        productintro1: '',
+        productinventory1:'',
+        type:'productUpload',
+        imgURL: 'https://img.51miz.com/Element/00/76/26/17/3a6723ce_E762617_2a8d9ea0.png'
       })
 
       onMounted(() => {
         state.seller = JSON.parse(getLocal('sellerinfo'))
+        state.sellerid1 = state.seller.sellerId
       })
 
-      const onSubmit = async () => {
-        if(!state.imgFile) {
-          Toast.fail("请选择商品图片")
-          return
-        }
-
-        Toast.loading({
-          message: '上传中...',
-          forbidClick: true
-        });
-
-        const res = await productUpload({
-            "productName": state.productName,
-            "productPrice": state.productPrice,
-            "productIntro":state.productIntro,
-            "productInventory":state.productInventory,
-            "productStatus": 1, 
-            "sellerId": state.seller.sellerId,
+      const onSubmit = async (values) => {
+        const { data } = await productUpload({
+            "productName": values.productname1,
+            "productPrice": values.productprice1,
+            "productIntro":values.productintro1,
+            "productInventory":values.productinventory1,
+            "productStatus":"1", 
           })
-
-        if(res.resultCode == 200) {
-          let formData = new FormData();
-          formData.append("file",state.imgFile)
-          formData.append("productName",state.productName)
-          formData.append("sellerId",state.seller.sellerId)
-
-          const res = await uploadProductSPic(formData)
-
-          if(res.resultCode == 200) {
-            state.productName = ''
-            state.productPrice = ''
-            state.productIntro = ''
-            state.productInventory = ''
-            state.imgFile = ''
-            Toast.success("上传成功")
-          }else {
-            Toast.fail("上传商品图像失败")
-          }
-        }else {
-          Toast.fail("上传商品信息失败")
-        }
-        Toast.clear()        
+          Toast.success('菜品上传成功')
+          setLocal('productinfo',JSON.stringify(data))
       }
 
       const change = async (e) => {
@@ -129,7 +109,32 @@
           Toast.fail("只能上传一张图片")
           return
         }
-        state.imgFile = file[0]
+  
+        Toast.loading({
+          message: '上传中...',
+          forbidClick: true
+        });
+        // 创建一个空对象实例
+        let formData = new FormData();
+        // 调用append()方法添加数据
+        for (let i = 0; i < length; i++) {
+          formData.append("file", file[i]);
+        }
+        formData.append("productName", state.product.productName)
+        formData.append("sellerId", state.seller.sellerId)
+        const res = await uploadProductSPic(formData)
+  
+        if(res.resultCode == 200) {
+          // 更新localStorage
+          state.product.productSPic = res.data
+          setLocal('productinfo',JSON.stringify(state.product))
+  
+          // 渲染图片
+          state.imgURL = genImgURL(state.product.productSPic)
+        }else {
+          Toast.fail("上传图片失败")
+        }
+        Toast.clear()
       }
 
       return {
@@ -154,29 +159,36 @@
     }
   
     .product-info {
-        width: 100%;
-        margin: 1px 1px;
-        height: 35px;
+        width: 94%;
+        margin: 10px;
+        height: 155px;
         background: linear-gradient(90deg, @primary, #51c7c7);
         box-shadow: 0 2px 5px #269090;
         border-radius: 6px;
         .uploader_box {
-          width: 100%;
-          height: 30px;
+          width: 50%;
+          height: 125px;
+          left: 25%;
+          top: 15px;
           overflow: hidden;
           position: relative;
-          #upload_input {
+          border-radius: 50%;
+          #logimg {
             position: absolute;
             top: 0;
-            left: 10px;
+            left: 0;
             width: 100%;
             height: 100%;
             cursor: pointer;
-            color: #fff;
-            text-decoration: none;
-            text-align: center;
-            font:normal normal normal 14px/40px 'Microsoft YaHei';
-            border-radius: 4px;
+          }
+          #upload_input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            opacity: 0;
           }
         }
       }

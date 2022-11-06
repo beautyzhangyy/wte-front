@@ -26,17 +26,15 @@
       </div>
     </van-skeleton>
    <ul class="seller-list">
-    <!--
-      <li class="van-hairline--bottom" @click="goTo('/order')">
-      <span>订单管理</span>
-      <van-icon name="arrow" />
-      </li>
-      -->
       <li class="van-hairline--bottom" @click="goTo('/sellerSetting')">
         <span>账号管理</span>
         <van-icon name="arrow" />
       </li>
-      <li class="van-hairline--bottom" @click="goTo('/product')">
+      <li class="van-hairline--bottom" @click="goTo('/productUpload')">
+          <span>菜品上传</span>
+          <van-icon name="arrow" />
+      </li>
+      <li class="van-hairline--bottom" @click="goTo('/productManage')">
         <span>菜品管理</span>
         <van-icon name="arrow" />
       </li>
@@ -67,7 +65,7 @@ export default {
 
     onMounted(() => {
       state.seller = JSON.parse(getLocal('sellerinfo'))
-      state.imgURL = state.seller.sellerHeadPic ? genImgURL(state.seller.sellerHeadPic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
+      state.imgURL = state.seller.storePic ? genImgURL(state.seller.storePic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
       state.loading = false
     })
 

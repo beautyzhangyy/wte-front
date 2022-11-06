@@ -144,9 +144,9 @@ const router = createRouter({
       }
     },
     {
-      path: '/product',
-      name: 'product',
-      component: () => import('@/views/Product.vue'),
+      path: '/productManage',
+      name: 'productManage',
+      component: () => import('@/views/ProductManage.vue'),
       meta: {
         index: 2
       }
@@ -154,7 +154,7 @@ const router = createRouter({
     {
       path: '/productUpload',
       name: 'productUpload',
-      component: () => import(/* webpackChunkName: "productUpload" */ '@/views/ProductUpload.vue'),
+      component: () => import('@/views/ProductUpload.vue'),
       meta: {
         index: 3
       }

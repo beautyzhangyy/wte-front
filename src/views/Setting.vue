@@ -22,15 +22,6 @@
           @change="change($event)"
         />
       </div>
-      <!--
-      <div class="uploadImg">
-        <van-uploader multiple :max-count="1" :deletable="false" :preview-full-image="false" :max-size="2 * 1024 * 1024" accept="image/*"
-        @oversize="onOversize" :before-read="beforeRead" @after-read="afterRead" >
-          <img src="https://s.yezgea02.com/1604040746310/aaaddd.png"/>
-         <van-button type="primary"></van-button>
-      </van-uploader>
-      </div>
-      -->
     </div>
     <div class="input-item">
       <van-field v-model="nickname" label="昵称" />
