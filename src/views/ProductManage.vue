@@ -24,22 +24,25 @@
 
 <script>
 import { reactive, onMounted, toRefs} from 'vue'
+import sHeader from '@/components/SimpleHeader'
 import { useRouter } from 'vue-router'
 import navBar from '@/components/NavBar'
-import { getProductsAll } from '@/service/product'
+import { getProductsSellerList } from '@/service/product'
 import { Toast } from 'vant'
+import { getLocal } from '../common/js/utils'
 export default {
-  components: {
-    navBar
-  },
   setup() {
     const router = useRouter()
     const state = reactive({
       productinfo: [],
       imgRootUrl : 'http://localhost:8081',
     })
+
     onMounted(async () => {
-      const { data } = await getProductsAll()
+      state.seller = JSON.parse(getLocal('sellerinfo'))
+      const { data } = await getProductsSellerList({params:{
+        "sellerId":state.seller.sellerId
+      }})
       state.productinfo = data.list
       state.loading = false
       Toast.clear()
@@ -51,9 +54,13 @@ export default {
 
     return {
       ...toRefs(state),
-      goToDetail,
+      goToDetail
     }
   },
+  components: {
+    navBar,
+    sHeader
+  }
 }
 </script>
 

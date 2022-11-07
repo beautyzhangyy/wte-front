@@ -18,16 +18,6 @@
         <van-field v-model="productPrice"  label="价格" />
         <van-field v-model="productIntro" label="介绍" />
         <van-field v-model="productInventory" label="库存" />
-        <div id="app">
-          <div class="tabWrap">
-          <!-- 这个结构是tab导航，并给其绑定对应的点击事件，在点击事件的回调中
-          去控制对应内容的显示隐藏和样式的修改即：tab的切换-->
-          <div class="tabNav">
-            <div class="navOne" @click="tabOne">上架</div>
-            <div class="navTwo" @click="tabTwo">下架</div>
-          </div>
-          </div>
-        </div>
       </div>
       <van-button round class="save-btn" color="#1baeae" type="primary" @click="save" block>保存</van-button>
     </div>
@@ -39,35 +29,8 @@
   import { productUpdate, uploadProductSPic} from '@/service/product'
   import { setLocal } from '@/common/js/utils'
   import { Toast} from 'vant'
-  import { getLocal, genImgURL } from '../common/js/utils'
+  import { genImgURL } from '../common/js/utils'
   export default {
-    name: "app",
-    data() {
-      return {
-      showTabOne: true, // 二选一tab切换
-      showTabTwo: false, // 二选一tab切换
-      };
-    },
-    methods: {
-      // 二选一tab栏切换
-      tabOne() {
-      /*
-        点击tab1的时候，让tab1显示，tab2隐藏，即showTabOne为true，showTabTwo为false
-        同时修改tab1的样式使其"高亮",注意不要忘了修改tab2的样式，使其"不高亮"。
-        点击tab2的时候，也是同理。
-      */
-      this.showTabOne = true;
-      this.showTabTwo = false;
-      this.producctStatus="1"
-      },
-      // 二选一tab栏切换
-      tabTwo() {
-      this.showTabTwo = true;
-      this.showTabOne = false;
-      this.producctStatus="0"
-      },
-    },
-
     components: {
       sHeader
     },
@@ -82,13 +45,13 @@
         imgURL: '',
       })
   
-      onMounted(() => {
-        state.product = JSON.parse(getLocal('productinfo'))
+      onMounted(async () => {
+        state.product = await this('productinfo/${this.$route.query.id}')
         state.productName = state.product.productName
         state.productPrice = state.product.productPrice
         state.productIntro = state.product.productIntro
         state.productInventory = state.product.productInventory
-        state.imgURL = state.product.productSPic
+        state.imgURL = state.product.productSPic ? genImgURL(state.product.productSPic) : "https://s.yezgea02.com/1604040746310/aaaddd.png"
       })
   
       const save = async () => {
@@ -135,7 +98,7 @@
   
         if(res.resultCode == 200) {
           // 更新localStorage
-          state.seller.storePic = res.data
+          state.product.productSPic = res.data
           setLocal('productinfo',JSON.stringify(state.product))
   
           // 渲染图片
@@ -158,49 +121,6 @@
   
   <style lang="less" scoped>
     @import '../common/style/mixin';
-    .tabNav {
- width: 126px;
- height: 30px;
- border-radius: 2px;
- background-color: #e3e3e3;
- display: flex;
- align-items: center;
- justify-content: space-evenly;
- .navOne {
-  width: 60px;
-  height: 26px;
-  border-radius: 2px;
-  background-color: #fff;
-  color: #3985ec;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
- }
- .navTwo {
-  width: 60px;
-  height: 26px;
-  color: #80868d;
-  border-radius: 2px;
-  font-size: 14px;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
- }
-}
-.tabContent {
- margin-top: 8px;
- .navOneBox {
-  background-color: #bfa;
- }
- .navTwoBox {
-  background-color: #baf;
- }
-}
     .seting-box {
       .save-btn {
         width: 80%;

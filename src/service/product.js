@@ -24,6 +24,6 @@
     return axios.get('/product/updateInfo', params);
   }
 
-  export function getProductsAll() {
-    return axios.get('/product/ProductsAll');
+  export function getProductsSellerList(params) {
+    return axios.get('/product/ProductsSellerList', params);
   }
