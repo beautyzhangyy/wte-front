@@ -41,9 +41,9 @@
           <div class="good-item" v-for="item in productinfo" :key="item.productId">
             <img :src="imgRootUrl+item.productSPic" alt="">
             <div class="good-desc">
-              <span>菜名{{ item.productName }}</span>
-              <span>价格：{{ item.productPrice }}</span>
-              <span>介绍：{{ item.productIntro }}</span>
+              <span>菜名: {{ item.productName }}</span><p></p>
+              <span>价格：{{ item.productPrice }}</span><p></p>
+              <span>介绍：{{ item.productIntro }}</span><p></p>
               <span>库存：{{ item.productInventory }}</span>
             </div>
             <router-link class="show1" tag="span" to="./login" v-if="!isLogin"><img class="shopping" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt="">   </router-link>
@@ -267,12 +267,14 @@ export default {
         img {
           display: block;
           width: 120px;
+          height: 90px;
           margin: 0 auto;
         }
         .good-desc {
           text-align: center;
-          font-size: 14px;
-          padding: 10px 0;
+          line-height: 3px;
+          font-size: 10px;
+          padding: 10px ;
           // .title {
           //   color: #222333;
           // }

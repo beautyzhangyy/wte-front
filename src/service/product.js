@@ -19,3 +19,11 @@
   export function getProductsAtLeast() {
     return axios.get('/product/ProductsAtLeast');
   }
+
+  export function productUpdate(params) {
+    return axios.get('/product/updateInfo', params);
+  }
+
+  export function getProductsAll() {
+    return axios.get('/product/ProductsAll');
+  }

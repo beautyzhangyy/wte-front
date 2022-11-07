@@ -156,6 +156,14 @@ const router = createRouter({
       name: 'productUpload',
       component: () => import('@/views/ProductUpload.vue'),
       meta: {
+        index: 2
+      }
+    },
+    {
+      path: '/productUpdate',
+      name: 'productUpdate',
+      component: () => import('@/views/ProductUpdate.vue'),
+      meta: {
         index: 3
       }
     },

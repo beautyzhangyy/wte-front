@@ -1,65 +1,99 @@
 <template>
     <div class="product-box">
       <s-header :name="'菜品管理'"></s-header>
-     <ul class="product-list">
-        <li class="van-hairline--bottom" @click="goTo('/productUpload')">
-          <span>菜品上传</span>
-          <van-icon name="arrow" />
-        </li>
-        <li class="van-hairline--bottom">
-          <span>菜品管理</span>
-          <van-icon name="arrow" />
-        </li>
-      </ul>
       <nav-bar></nav-bar>
+    </div>
+  <div>
+    <div class="good">
+      <router-link class="show" tag="span" to="./productUpdate">
+        <div class="good-box">
+          <div class="good-item" v-for="item in productinfo" :key="item.productId">
+            <img :src="imgRootUrl+item.productSPic" alt="">
+            <div class="good-desc">
+              <span>菜名: {{ item.productName }}</span><p></p>
+              <span>价格：{{ item.productPrice }}</span><p></p>
+              <span>介绍：{{ item.productIntro }}</span><p></p>
+              <span>库存：{{ item.productInventory }}</span><p></p>
+            </div>
+          </div>
+        </div>
+      </router-link>
+    </div>
     </div>
   </template>
 
 <script>
-import navBar from '@/components/NavBar'
-import sHeader from '@/components/SimpleHeader'
+import { reactive, onMounted, toRefs} from 'vue'
 import { useRouter } from 'vue-router'
-
+import navBar from '@/components/NavBar'
+import { getProductsAll } from '@/service/product'
+import { Toast } from 'vant'
 export default {
   components: {
-    navBar,
-    sHeader
+    navBar
   },
   setup() {
     const router = useRouter()
+    const state = reactive({
+      productinfo: [],
+      imgRootUrl : 'http://localhost:8081',
+    })
+    onMounted(async () => {
+      const { data } = await getProductsAll()
+      state.productinfo = data.list
+      state.loading = false
+      Toast.clear()
+    })
 
-    const goBack = () => {
-      router.go(-1)
-    }
-
-    const goTo = (r, query) => {
-      router.push({ path: r, query: query || {} })
+    const goToDetail = (item) => {
+      router.push({ path: `/product/${item.productId}` })
     }
 
     return {
-      goBack,
-      goTo
+      ...toRefs(state),
+      goToDetail,
     }
-  }
+  },
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" scoped >
   @import '../common/style/mixin';
-  .product-box {
-    .product-list {
-      padding: 0 20px;
-      margin-top: 20px;
-      li {
-        height: 40px;
-        line-height: 40px;
-        display: flex;
-        justify-content: space-between;
-        font-size: 14px;
-        .van-icon-arrow {
-          margin-top: 13px;
+  .good {
+    .good-header {
+      background: #f9f9f9;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      color: @primary;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .good-box {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      .good-item {
+        box-sizing: border-box;
+        width: 50%;
+        border-bottom: 1PX solid #e9e9e9;
+        padding: 10px 10px;
+        img {
+          display: block;
+          width: 120px;
+          height: 90px;
+          margin: 0 auto;
+        }
+        .good-desc {
+          text-align: center;
+          line-height: 3px;
+          font-size: 10px;
+          padding: 10px ;
+        }
+        &:nth-child(2n + 1) {
+          border-right: 1PX solid #e9e9e9;
         }
       }
-    }
   }
+}
 </style>
