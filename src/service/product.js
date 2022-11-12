@@ -16,12 +16,16 @@
     return axios.post('/product/uploadProductPic', params, {headers: {'Content-Type': 'multipart/form-data'}});
   }
 
+  export function getProductInfo(params) {
+    return axios.get('/product/getProductInfo', params);
+  }
+
   export function getProductsAtLeast() {
     return axios.get('/product/ProductsAtLeast');
   }
 
   export function productUpdate(params) {
-    return axios.get('/product/updateInfo', params);
+    return axios.post('/product/updateInfo', params);
   }
 
   export function getProductsSellerList(params) {

@@ -44,10 +44,11 @@
               <span>菜名: {{ item.productName }}</span><p></p>
               <span>价格：{{ item.productPrice }}</span><p></p>
               <span>介绍：{{ item.productIntro }}</span><p></p>
-              <span>库存：{{ item.productInventory }}</span>
+              <span>库存：{{ item.productInventory }}</span><p></p>
+              <div class="show1" @click="addToCart(item)">
+              <img class="shopping" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt="">
             </div>
-            <router-link class="show1" tag="span" to="./login" v-if="!isLogin"><img class="shopping" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt="">   </router-link>
-            <router-link class="show1" tag="span" to="./cart" v-else><img class="shopping" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt=""></router-link>
+            </div>
           </div>
         </div>
       </van-skeleton>
@@ -65,6 +66,7 @@ import { getLocal } from '@/common/js/utils'
 import { getProductsAtLeast } from '@/service/product'
 import { Toast } from 'vant'
 import { useStore  } from 'vuex'
+import { addCart } from '../service/cart'
 export default {
   name: 'home',
   components: {
@@ -130,6 +132,16 @@ export default {
       })
     })
 
+    const addToCart = (item) => {
+      if(state.isLogin != true){
+        router.push({ path: `/login` })
+      }else{
+        state.user = JSON.parse(getLocal('userinfo'))
+        addCart({ "userId": state.user.userId, "productId": item.productId,"num":1 })
+        Toast.success("添加成功")
+      }
+    }
+
     const goToDetail = (item) => {
       router.push({ path: `/product/${item.productId}` })
     }
@@ -141,6 +153,7 @@ export default {
     return {
       ...toRefs(state),
       goToDetail,
+      addToCart,
       tips
     }
   },

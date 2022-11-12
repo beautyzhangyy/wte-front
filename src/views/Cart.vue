@@ -13,23 +13,23 @@
     <s-header :name="'购物车'" :noback="true"></s-header>
     <div class="cart-body">
       <van-checkbox-group @change="groupChange" v-model="result" ref="checkboxGroup">
-        <van-swipe-cell :right-width="50" v-for="(item, index) in list" :key="index">
+        <van-swipe-cell :right-width="50" v-for="item in cartinfo" :key="item.cartId">
           <div class="good-item">
-            <van-checkbox :name="item.cartItemId" />
-            <div class="good-img"><img :src="$filters.prefix(item.goodsCoverImg)" alt=""></div>
+            <van-checkbox :name="item.cartId" />
+            <div class="good-img"><img :src="imgRootUrl+item.productSPic" alt=""></div>
             <div class="good-desc">
               <div class="good-title">
-                <span>{{ item.goodsName }}</span>
-                <span>x{{ item.goodsCount }}</span>
+                <span>{{ item.productName }}</span>
+                <span>x{{ item.num }}</span>
               </div>
               <div class="good-btn">
-                <div class="price">¥{{ item.sellingPrice }}</div>
+                <div class="price">¥{{ item.productPrice }}</div>
                 <van-stepper
                   integer
                   :min="1"
-                  :max="5"
-                  :model-value="item.goodsCount"
-                  :name="item.cartItemId"
+                  :max="30"
+                  :model-value="item.num"
+                  :name="item.cartId"
                   async-change
                   @change="onChange"
                 />
@@ -42,14 +42,14 @@
               icon="delete"
               type="danger"
               class="delete-button"
-              @click="deleteGood(item.cartItemId)"
+              @click="deleteProduct(item)"
             />
           </template>
         </van-swipe-cell>
       </van-checkbox-group>
     </div>
     <van-submit-bar
-      v-if="list.length > 0"
+      v-if="cartinfo.length > 0"
       class="submit-all van-hairline--top"
       :price="total * 100"
       button-text="结算"
@@ -57,7 +57,7 @@
     >
       <van-checkbox @click="allCheck" v-model:checked="checkAll">全选</van-checkbox>
     </van-submit-bar>
-    <div class="empty" v-if="!list.length">
+    <div class="empty" v-if="!cartinfo.length">
       <img class="empty-cart" src="https://s.yezgea02.com/1604028375097/empty-car.png" alt="空购物车">
       <div class="title">购物车空空如也</div>
       <van-button round color="#1baeae" type="primary" @click="goTo" block>前往选购</van-button>
@@ -69,11 +69,11 @@
 <script>
 import { reactive, onMounted, computed, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
 import { Toast } from 'vant'
 import navBar from '@/components/NavBar'
 import sHeader from '@/components/SimpleHeader'
-import { getCart, deleteCartItem, modifyCart } from '@/service/cart'
+import { getLocal } from '../common/js/utils'
+import { getCartList, updateCart, deleteCart} from '@/service/cart'
 
 export default {
   components: {
@@ -82,32 +82,29 @@ export default {
   },
   setup() {
     const router = useRouter()
-    const store = useStore()
     const state = reactive({
       checked: false,
-      list: [],
+      cartinfo: [],
+      imgRootUrl : 'http://localhost:8081',
       all: false,
       result: [],
       checkAll: true
     })
 
-    onMounted(() => {
-      init()
-    })
-
-    const init = async () => {
+    onMounted(async () => {
       Toast.loading({ message: '加载中...', forbidClick: true });
-      const { data } = await getCart({ pageNumber: 1 })
-      state.list = data
-      state.result = data.map(item => item.cartItemId)
+      state.user = JSON.parse(getLocal('userinfo'))
+      const { data } = await getCartList({params:{"userId":state.user.userId}})
+      state.cartinfo = data.list
+      state.result = data.map(item => item.cartId)
       Toast.clear()
-    }
+    })
 
     const total = computed(() => {
       let sum = 0
-      let _list = state.list.filter(item => state.result.includes(item.cartItemId))
-      _list.forEach(item => {
-        sum += item.goodsCount * item.sellingPrice
+      let _cartinfo = state.cartinfo.filter(item => state.result.includes(item.cartId))
+      _cartinfo.forEach(item => {
+        sum += item.num * item.productPrice
       })
       return sum
     })
@@ -121,24 +118,24 @@ export default {
     }
 
     const onChange = async (value, detail) => {
-      if (value > 5) {
+      if (value > 30) {
         Toast.fail('超出单个商品的最大购买数量')
         return
       }
       if (value < 1) {
-        Toast.fail('商品不得小于0')
+        Toast.fail('商品不得小于1')
         return
       }
-      if (state.list.filter(item => item.cartItemId == detail.name)[0].goodsCount == value) return
+      if (state.cartinfo.filter(item => item.cartId == detail.name)[0].num == value) return
       Toast.loading({ message: '修改中...', forbidClick: true });
       const params = {
-        cartItemId: detail.name,
-        goodsCount: value
+        cartId: detail.name,
+        num: value
       }
-      await modifyCart(params)
-      state.list.forEach(item => {
-        if (item.cartItemId == detail.name) {
-          item.goodsCount = value
+      await updateCart(params)
+      state.cartinfo.forEach(item => {
+        if (item.cartId == detail.name) {
+          item.num = value
         }
       })
       Toast.clear();
@@ -153,15 +150,13 @@ export default {
       router.push({ path: '/create-order', query: { cartItemIds: params } })
     }
 
-    const deleteGood = async (id) => {
-      await deleteCartItem(id)
-      store.dispatch('updateCart')
-      init()
+    const deleteProduct = (item) => {
+      deleteCart({params:{"cartId":item.cartId}})
     }
 
     const groupChange = (result) => {
       console.log(1)
-      if (result.length == state.list.length) {
+      if (result.length == state.cartinfo.length) {
         console.log(2)
         state.checkAll = true
       } else {
@@ -173,14 +168,12 @@ export default {
     
     const allCheck = () => {
       if (!state.checkAll) {
-        state.result = state.list.map(item => item.cartItemId)
+        state.result = state.cartinfo.map(item => item.cartId)
       } else {
         state.result = []
       }
     }
-
     
-
     return {
       ...toRefs(state),
       total,
@@ -188,7 +181,7 @@ export default {
       goTo,
       onChange,
       onSubmit,
-      deleteGood,
+      deleteProduct,
       groupChange,
       allCheck
     }

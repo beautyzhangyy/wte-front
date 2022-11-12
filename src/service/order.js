@@ -10,8 +10,16 @@
 import axios from '../utils/axios'
 
 export function createOrder(params) {
-  return axios.post('/saveOrder', params);
+  return axios.post('/order/addOrder', params);
 }
+
+export function getOrderProductsList(params) {
+  return axios.get('/order/OrderProductsList', params);
+}
+
+// export function createOrder(params) {
+//   return axios.post('/saveOrder', params);
+// }
 
 export function getOrderList(params) {
   return axios.get('/order', { params });

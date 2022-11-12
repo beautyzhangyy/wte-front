@@ -23,14 +23,14 @@
     </div>
     <div class="good">
       <div class="good-item" v-for="(item, index) in cartList" :key="index">
-        <div class="good-img"><img :src="$filters.prefix(item.goodsCoverImg)" alt=""></div>
+        <div class="good-img"><img :src="imgRootUrl+item.productSPic" alt=""></div>
         <div class="good-desc">
           <div class="good-title">
-            <span>{{ item.goodsName }}</span>
-            <span>x{{ item.goodsCount }}</span>
+            <span>{{ item.productName }}</span>
+            <span>x{{ item.num }}</span>
           </div>
           <div class="good-btn">
-            <div class="price">¥{{ item.sellingPrice }}</div>
+            <div class="price">¥{{ item.productPrice }}</div>
           </div>
         </div>
       </div>
@@ -51,8 +51,7 @@
       @close="close"
     >
       <div :style="{ width: '90%', margin: '0 auto', padding: '50px 0' }">
-        <van-button :style="{ marginBottom: '10px' }" color="#1989fa" block @click="handlePayOrder(1)">支付宝支付</van-button>
-        <van-button color="#4fc08d" block @click="handlePayOrder(2)">微信支付</van-button>
+        <van-button :style="{ marginBottom: '10px' }" color="#1989fa" block @click="handlePayOrder()">支付</van-button>
       </div>
     </van-popup>
   </div>
@@ -61,9 +60,8 @@
 <script>
 import { reactive, onMounted, toRefs, computed } from 'vue'
 import sHeader from '@/components/SimpleHeader'
-import { getByCartItemIds } from '@/service/cart'
-import { getDefaultAddress, getAddressDetail } from '@/service/address'
-import { createOrder, payOrder } from '@/service/order'
+import { getCartInfo } from '@/service/cart'
+import { createOrder } from '@/service/order'
 import { setLocal, getLocal } from '@/common/js/utils'
 import { Toast } from 'vant'
 import { useRoute, useRouter } from 'vue-router'
@@ -79,6 +77,7 @@ export default {
       address: {},
       showPay: false,
       orderNo: '',
+      imgRootUrl : 'http://localhost:8081',
       cartItemIds: []
     })
 
@@ -88,36 +87,29 @@ export default {
     
     const init = async () => {
       Toast.loading({ message: '加载中...', forbidClick: true });
-      const { addressId, cartItemIds } = route.query
-      const _cartItemIds = cartItemIds ? JSON.parse(cartItemIds) : JSON.parse(getLocal('cartItemIds'))
-      console.log('cartItemIds', cartItemIds)
-      setLocal('cartItemIds', JSON.stringify(_cartItemIds))
-      const { data: list } = await getByCartItemIds({ cartItemIds: _cartItemIds.join(',') })
-      const { data: address } = addressId ? await getAddressDetail(addressId) : await getDefaultAddress()
-      if (!address) {
-        router.push({ path: '/address' })
-        return
-      }
+      const { cartIds } = route.query
+      const _cartIds = cartIds ? JSON.parse(cartIds) : JSON.parse(getLocal('cartIds'))
+      console.log('cartIds', cartIds)
+      setLocal('cartIds', JSON.stringify(_cartIds))
+      const { data: list } = await getCartInfo({ "cartId": _cartIds.join(',') })
       state.cartList = list
-      state.address = address
       Toast.clear()
     }
 
     const goTo = () => {
-      router.push({ path: '/address', query: { cartItemIds: JSON.stringify(state.cartItemIds), from: 'create-order' }})
+      router.push({ path: '/address', query: { cartIds: JSON.stringify(state.cartItemIds), from: 'create-order' }})
     }
 
     const deleteLocal = () => {
-      setLocal('cartItemIds', '')
+      setLocal('cartIds', '')
     }
 
     const handleCreateOrder = async () => {
       const params = {
-        addressId: state.address.addressId,
-        cartItemIds: state.cartList.map(item => item.cartItemId)
+        cartIds: state.cartList.map(item => item.cartIds)
       }
       const { data } = await createOrder(params)
-      setLocal('cartItemIds', '')
+      setLocal('cartIds', '')
       state.orderNo = data
       state.showPay = true
     }
@@ -126,18 +118,10 @@ export default {
       router.push({ path: '/order' })
     }
 
-    const handlePayOrder = async (type) => {
-      await payOrder({ orderNo: state.orderNo, payType: type })
-      Toast.success('支付成功')
-      setTimeout(() => {
-        router.push({ path: '/order' })
-      }, 2000)
-    }
-
     const total = computed(() => {
       let sum = 0
       state.cartList.forEach(item => {
-        sum += item.goodsCount * item.sellingPrice
+        sum += item.num * item.productPrice
       })
       return sum
     })
@@ -148,7 +132,6 @@ export default {
       deleteLocal,
       handleCreateOrder,
       close,
-      handlePayOrder,
       total
     }
   }

@@ -160,7 +160,7 @@ const router = createRouter({
       }
     },
     {
-      path: '/productUpdate',
+      path: '/productUpdate/:id',
       name: 'productUpdate',
       component: () => import('@/views/ProductUpdate.vue'),
       meta: {

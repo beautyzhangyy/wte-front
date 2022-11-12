@@ -13,11 +13,6 @@
     <s-header :name="'我的订单'" :back="'/user'"></s-header>
     <van-tabs @click="onChangeTab" :color="'#1baeae'" :title-active-color="'#1baeae'" class="order-tab" v-model="status">
       <van-tab title="全部" name=''></van-tab>
-      <van-tab title="待付款" name="0"></van-tab>
-      <van-tab title="待确认" name="1"></van-tab>
-      <van-tab title="待发货" name="2"></van-tab>
-      <van-tab title="已发货" name="3"></van-tab>
-      <van-tab title="交易完成" name="4"></van-tab>
     </van-tabs>
     <div class="content">
       <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="order-list-refresh">
@@ -28,19 +23,15 @@
           @load="onLoad"
           @offset="10"
         >
-          <div v-for="(item, index) in list" :key="index" class="order-item-box" @click="goTo(item.orderNo)">
+          <div v-for="item in orderinfo" :key="item.orderId" class="order-item-box" @click="goTo(item.orderNo)">
             <div class="order-item-header">
-              <span>订单时间：{{ item.createTime }}</span>
-              <span>{{ item.orderStatusString }}</span>
             </div>
             <van-card
-              v-for="one in item.newBeeMallOrderItemVOS"
-              :key="one.orderId"
-              :num="one.goodsCount"
-              :price="one.sellingPrice"
-              desc="全场包邮"
-              :title="one.goodsName"
-              :thumb="$filters.prefix(one.goodsCoverImg)"
+              :key="item.orderId"
+              :num="item.num"
+              :price="item.productPrice"
+              :title="item.productName"
+              :thumb="imgRootUrl+item.productSPic"
             />
           </div>
         </van-list>
@@ -52,8 +43,9 @@
 <script>
 import { reactive, toRefs } from 'vue';
 import sHeader from '@/components/SimpleHeader'
-import { getOrderList } from '@/service/order'
+import { getOrderProductsList } from '@/service/order'
 import { useRouter } from 'vue-router';
+import { getLocal } from '../common/js/utils'
 
 export default {
   name: 'Order',
@@ -67,14 +59,16 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      list: [],
+      imgRootUrl : 'http://localhost:8081',
+      orderinfo: [],
       page: 1,
       totalPage: 0
     })
 
     const loadData = async () => {
-      const { data, data: { list } } = await getOrderList({ pageNumber: state.page, status: state.status })
-      state.list = state.list.concat(list)
+      state.user = JSON.parse(getLocal('userinfo'))
+      const { data } = await getOrderProductsList({params:{"userId":state.user.userId}})
+      state.orderinfo = data.list
       state.totalPage = data.totalPage
       state.loading = false;
       if (state.page >= data.totalPage) state.finished = true

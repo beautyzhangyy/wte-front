@@ -9,24 +9,33 @@
 
 import axios from '../utils/axios'
 
+// export function addCart(params) {
+//   return axios.post('/shop-cart', params);
+// }
+
 export function addCart(params) {
-  return axios.post('/shop-cart', params);
+  return axios.post('/cart/addCart', params);
 }
 
-export function modifyCart(params) {
-  return axios.put('/shop-cart', params);
+export function getCartList(params) {
+  return axios.get('/cart/CartProductsUserList', params);
 }
+
+export function updateCart(params) {
+  return axios.post('/cart/updateCart', params);
+}
+
+export function deleteCart(params) {
+  return axios.get('/cart/delete', params);
+}
+
 
 export function getCart(params) {
   console.log(params)
   return "axios.get('/shop-cart', { params })";
 }
 
-export function deleteCartItem(id) {
-  return axios.delete(`/shop-cart/${id}`);
-}
-
-export function getByCartItemIds(params) {
-  return axios.get('/shop-cart/settle', { params });
+export function getCartInfo(params) {
+  return axios.get('/cart/getCartInfo', { params });
 }
 

@@ -5,19 +5,17 @@
     </div>
   <div>
     <div class="good">
-      <router-link class="show" tag="span" to="./productUpdate">
         <div class="good-box">
-          <div class="good-item" v-for="item in productinfo" :key="item.productId">
+          <div class="good-item" v-for="item in productinfo" :key="item.productId" @click="goToManage(item)">
             <img :src="imgRootUrl+item.productSPic" alt="">
             <div class="good-desc">
               <span>菜名: {{ item.productName }}</span><p></p>
               <span>价格：{{ item.productPrice }}</span><p></p>
               <span>介绍：{{ item.productIntro }}</span><p></p>
               <span>库存：{{ item.productInventory }}</span><p></p>
-            </div>
           </div>
         </div>
-      </router-link>
+      </div>
     </div>
     </div>
   </template>
@@ -48,13 +46,18 @@ export default {
       Toast.clear()
     })
 
+    const goToManage = (item) => {
+      router.push({ path: `/productUpdate/${item.productId}` })
+    }
+
     const goToDetail = (item) => {
       router.push({ path: `/product/${item.productId}` })
     }
 
     return {
       ...toRefs(state),
-      goToDetail
+      goToDetail,
+      goToManage
     }
   },
   components: {
@@ -85,6 +88,11 @@ export default {
         width: 50%;
         border-bottom: 1PX solid #e9e9e9;
         padding: 10px 10px;
+        .save-btn {
+        width: 120px;
+        height: 90px;
+        margin: 20px auto ;
+      }
         img {
           display: block;
           width: 120px;
