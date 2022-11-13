@@ -20,10 +20,9 @@
         <van-field v-model="productInventory" label="库存" />
       </div>
       <div>
-      <label><input v-model="productStatus" type="radio" value="1" @change="getRadioVal">上架</label>
-      <label><input v-model="productStatus" type="radio" value="0" @change="getRadioVal">下架</label>
+        <label><input class="check-box" v-model="productStatus" type="radio" value="1" >上架</label>
+        <label><input class="check-box" v-model="productStatus" type="radio" value="0">下架</label>
       </div>
-      <p></p>
       <van-button r ound class="save-btn" color="#1baeae" type="primary" @click="save" block>保存</van-button>
     </div>
   </template>
@@ -64,7 +63,7 @@ export default {
       state.productIntro = state.product.productIntro
       state.productInventory = state.product.productInventory
       state.productStatus = state.product.productStatus
-      state.imgURL = state.product.productSPic
+      state.imgURL = genImgURL(state.product.productSPic)
     })
 
     const save = async () => {
@@ -131,4 +130,57 @@ export default {
 
 }
 </script>
+  
+<style lang="less" scoped>
+    @import '../common/style/mixin';
+    .seting-box {
+      .save-btn {
+        width: 80%;
+        margin: 20px auto ;
+      }
+    }
+  
+    .product-info {
+        width: 94%;
+        margin: 10px;
+        height: 155px;
+        background: linear-gradient(90deg, @primary, #51c7c7);
+        box-shadow: 0 2px 5px #269090;
+        border-radius: 6px;
+        .uploader_box {
+          width: 50%;
+          height: 125px;
+          left: 25%;
+          top: 15px;
+          overflow: hidden;
+          position: relative;
+          border-radius: 50%;
+          #logimg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+          }
+          #upload_input {
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            left: 10px;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            font:normal normal normal 14px/40px 'Microsoft YaHei';
+            border-radius: 4px;
+          }
+        }
+      }
+    .check-box {
+      -webkit-appearance: checkbox;
+    }
+  </style>
   

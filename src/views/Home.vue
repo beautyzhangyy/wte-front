@@ -284,10 +284,9 @@ export default {
           margin: 0 auto;
         }
         .good-desc {
-          text-align: center;
-          line-height: 3px;
+          line-height: 6px;
           font-size: 10px;
-          padding: 10px ;
+          padding: 10px 0px 10px 20px;
           // .title {
           //   color: #222333;
           // }

@@ -7,7 +7,7 @@
     <div class="good">
         <div class="good-box">
           <div class="good-item" v-for="item in productinfo" :key="item.productId" @click="goToManage(item)">
-            <img :src="imgRootUrl+item.productSPic" alt="">
+            <img :src="imgRootUrl+item.productSPic + '?random=' + Math.random()" alt="">
             <div class="good-desc">
               <span>菜名: {{ item.productName }}</span><p></p>
               <span>价格：{{ item.productPrice }}</span><p></p>
@@ -92,7 +92,7 @@ export default {
         width: 120px;
         height: 90px;
         margin: 20px auto ;
-      }
+        }
         img {
           display: block;
           width: 120px;
@@ -100,10 +100,9 @@ export default {
           margin: 0 auto;
         }
         .good-desc {
-          text-align: center;
-          line-height: 3px;
+          line-height: 6px;
           font-size: 10px;
-          padding: 10px ;
+          padding: 10px 0px 10px 20px;
         }
         &:nth-child(2n + 1) {
           border-right: 1PX solid #e9e9e9;
