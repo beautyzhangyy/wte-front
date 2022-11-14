@@ -147,7 +147,7 @@ export default {
         return
       }
       const params = JSON.stringify(state.result)
-      router.push({ path: '/create-order', query: { cartItemIds: params } })
+      router.push({ path: '/create-order', query: { cartIds: params } })
     }
 
     const deleteProduct = (item) => {

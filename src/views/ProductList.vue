@@ -18,7 +18,8 @@
           <input
             type="text"
             class="search-title"
-            v-model="keyword"/>
+            v-model="keyword"
+            placeholder="请输入你想要的菜品"/>
         </div>
         <span class="search-btn" @click="getSearch">搜索</span>
       </header>

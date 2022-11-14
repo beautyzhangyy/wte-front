@@ -20,6 +20,10 @@
     return axios.get('/product/getProductInfo', params);
   }
 
+  export function updateInventory(params) {
+    return axios.get('/product/updateInventory', params);
+  }
+
   export function getProductsAtLeast() {
     return axios.get('/product/ProductsAtLeast');
   }
