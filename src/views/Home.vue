@@ -29,7 +29,7 @@
     <nav-bar />
     <swiper :list="swiperList"></swiper>
     <div class="category-list">
-      <div v-for="item in categoryList" v-bind:key="item.categoryId" @click="tips">
+      <div v-for="item in categoryList" v-bind:key="item.categoryId" @click="tips(item)">
         <img :src="item.imgUrl">
         <span>{{item.name}}</span>
       </div>
@@ -45,6 +45,7 @@
               <span>价格：{{ item.productPrice }}</span><p></p>
               <span>介绍：{{ item.productIntro }}</span><p></p>
               <span>库存：{{ item.productInventory }}</span><p></p>
+              卖家：{{ item.storeName }}<p></p>
               <div class="show1" @click="addToCart(item)">
               <img class="shopping" src="https://img.51miz.com/Element/00/37/55/19/01eb7699_E375519_856bb272.png" alt="">
             </div>
@@ -146,8 +147,12 @@ export default {
       router.push({ path: `/product/${item.productId}` })
     }
 
-    const tips = () => {
-      Toast('敬请期待');
+    const tips = (item) => {
+      if(item.categoryId==100002){
+        router.push({ path: `/eatWhat` })
+      }else{
+        Toast('敬请期待');
+      }
     }
 
     return {

@@ -28,10 +28,22 @@
     return axios.get('/product/ProductsAtLeast');
   }
 
+  export function RandomWTE() {
+    return axios.get('/product/RandomWTE');
+  }
+
   export function productUpdate(params) {
     return axios.post('/product/updateInfo', params);
   }
 
   export function getProductsSellerList(params) {
     return axios.get('/product/ProductsSellerList', params);
+  }
+
+  export function getProductsCategory(params) {
+    return axios.get('/product/ProductsCategory', params);
+  }
+
+  export function getProductsBySearch(params) {
+    return axios.get('/product/ProductsBySearch', params);
   }

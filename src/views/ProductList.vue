@@ -40,12 +40,14 @@
         >
           <!-- <p v-for="item in list" :key="item">{{ item }}</p> -->
           <template v-if="productList.length">
-            <div class="product-item" v-for="(item, index) in productList" :key="index" @click="productDetail(item)">
-              <img :src="$filters.prefix(item.goodsCoverImg)" />
+            <div class="product-item" v-for="item in productinfo" :key="item.productId" @click="productDetail(item)">
+              <img :src="imgRootUrl+item.productSPic" />
               <div class="product-info">
-                <p class="name">{{item.goodsName}}</p>
-                <p class="subtitle">{{item.goodsIntro}}</p>
-                <span class="price">￥ {{item.sellingPrice}}</span>
+                <p class="name">{{item.productName}}</p>
+                <p class="subtitle">{{item.productIntro}}</p>
+                <span>库存：{{ item.productInventory }}</span>
+                卖家：{{ item.storeName }}
+                <span class="price">￥ {{item.productPrice}}</span>
               </div>
             </div>
           </template>
@@ -59,7 +61,7 @@
 <script>
 import { reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { search } from '@/service/good'
+import { getProductsBySearch } from '@/service/product'
 export default {
   setup() {
     const route = useRoute()
@@ -77,11 +79,7 @@ export default {
       page: 1,
       orderBy: ''
     })
-
-    // onMounted(() => {
-    //   init()
-    // })
-
+    
     const init = async () => {
       const { categoryId } = route.query
       if (!categoryId && !state.keyword) {
@@ -90,9 +88,9 @@ export default {
         state.loading = false;
         return
       }
-      const { data, data: { list } } = await search({ pageNumber: state.page, goodsCategoryId: categoryId, keyword: state.keyword, orderBy: state.orderBy })
+      const { data } = await getProductsBySearch({params:{"productName":state.keyword}})
       
-      state.productList = state.productList.concat(list)
+      state.productList = data.list
       state.totalPage = data.totalPage
       state.loading = false;
       if (state.page >= data.totalPage) state.finished = true

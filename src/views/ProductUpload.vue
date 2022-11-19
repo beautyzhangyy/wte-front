@@ -44,6 +44,11 @@
               />
             </div>
           </div>
+          <p></p>
+          <div>
+          <label><input class="check-box" v-model="productCategory" type="radio" value="food" >食品</label>
+          <label><input class="check-box" v-model="productCategory" type="radio" value="drink">饮品</label>
+          </div>
           <div style="margin: 16px;">
             <van-button round block color="#1baeae" native-type="submit">新增菜品</van-button>
           </div>
@@ -71,6 +76,7 @@
         productPrice: '',
         productIntro: '',
         productInventory:'',
+        productCategory:'',
         imgFile: ''
       })
 
@@ -93,6 +99,7 @@
             "productName": state.productName,
             "productPrice": state.productPrice,
             "productIntro":state.productIntro,
+            "productCategory":state.productCategory,
             "productInventory":state.productInventory,
             "productStatus": 1, 
             "sellerId": state.seller.sellerId,
@@ -110,6 +117,7 @@
             state.productName = ''
             state.productPrice = ''
             state.productIntro = ''
+            state.productCategory = ''
             state.productInventory = ''
             state.imgFile = ''
             Toast.success("上传成功")
@@ -180,6 +188,9 @@
           }
         }
       }
+      .check-box {
+      -webkit-appearance: checkbox;
+    }
     
   </style>
   

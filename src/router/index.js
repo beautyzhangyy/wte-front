@@ -40,6 +40,22 @@ const router = createRouter({
       }
     },
     {
+      path: '/categoryDetail/:id',
+      name: 'categoryDetail',
+      component: () => import(/* webpackChunkName: "categoryDetail" */ '@/views/CategoryDetail.vue'),
+      meta: {
+        index: 2
+      }
+    },
+    {
+      path: '/eatWhat',
+      name: 'eatWhat',
+      component: () => import(/* webpackChunkName: "eatWhat" */ '@/views/EatWhat.vue'),
+      meta: {
+        index: 2
+      }
+    },
+    {
       path: '/product-list',
       name: 'product-list',
       component: () => import(/* webpackChunkName: "product-list" */ '@/views/ProductList.vue'),

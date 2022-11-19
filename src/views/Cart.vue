@@ -152,6 +152,7 @@ export default {
 
     const deleteProduct = (item) => {
       deleteCart({params:{"cartId":item.cartId}})
+      location. reload()
     }
 
     const groupChange = (result) => {
